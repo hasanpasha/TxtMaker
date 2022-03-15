@@ -30,6 +30,7 @@ class MainWindow(QMainWindow, MAIN_CLASS):
         self.removeButton.clicked.connect(self.removeTab)
         self.PreButton.clicked.connect(self.preTab)
         self.saveAllbtn.clicked.connect(self.saveAll)
+        self.clearbtn.clicked.connect(self.clearAll)
 
     def saveAll(self):
         current = self.controlerTab.currentIndex()
@@ -42,10 +43,12 @@ class MainWindow(QMainWindow, MAIN_CLASS):
                 output_dir = path.join(dir, prefixText)
                 if path.exists(output_dir):
                     print("Already Exist")
-                    return
 
-            mkdir(output_dir)
-            print(f"Directory {output_dir} created.")
+                else:
+                    mkdir(output_dir)
+                    print(f"Directory {output_dir} created.")
+            else:
+                return
 
 
             for i in range(0, count):
@@ -77,7 +80,7 @@ class MainWindow(QMainWindow, MAIN_CLASS):
 
         if ((current + 1) == numberOfTabs):
 
-            name = "1"
+            name = "0"
             if currentName != None:
                 name = f"{int(currentName) + 1}"
 
@@ -90,6 +93,9 @@ class MainWindow(QMainWindow, MAIN_CLASS):
 
         self.controlerTab.setCurrentIndex(current + 1)
 
+        ## Setting focus
+        insideTextEdit = self.controlerTab.widget(current + 1).findChild(QTextEdit, "textEdit")
+        insideTextEdit.setFocus(True)
 
 
     def removeTab(self):
@@ -102,7 +108,8 @@ class MainWindow(QMainWindow, MAIN_CLASS):
         if current > 0:
             self.controlerTab.setCurrentIndex(current - 1)
 
-
+    def clearAll(self):
+        self.controlerTab.clear()
 
 if __name__ == '__main__':
     app = QApplication([])
